@@ -1,134 +1,293 @@
  <!DOCTYPE html>
 <html lang="ko">
 <head>
-  <base target="_blank">
   <meta charset="UTF-8">
-  <title>상단고정 검색엔진 + 콘텐츠 탭</title>
+  <title>상단고정 검색엔진 + 콘텐츠</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <style>
-    :root {
-      --main: #3c3c8c;
-      --main-light: #e4e7fb;
-      --tab-selected: #3c3c8c;
-      --tab-bg: #eef1fb;
-      --tab-text: #273870;
-      --tab-selected-text: #fff;
+    html, body {
+      margin: 0; padding: 0; box-sizing: border-box;
+      background: #fff;
+      font-family: 'Segoe UI', '맑은 고딕', 'NanumGothic', Arial, sans-serif;
     }
-    body { margin: 0; padding: 0; background: #fff; font-family: 'Segoe UI', '맑은 고딕', Arial, sans-serif; }
-    .search-bar-fixed {
-      position: sticky; top: 0; background: #fff; z-index: 100;
-      box-shadow: 0 2px 14px 0 rgba(30,32,80,0.07);
-      width: 100vw; display: flex; justify-content: center; align-items: center;
-      padding: 30px 0 10px 0;
+    /* 중앙 정렬 검색바 */
+    .search-bar-wrap {
+      width: 100vw;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      margin: 0; padding-top: 32px; padding-bottom: 14px;
+      box-sizing: border-box;
     }
-    .search-bar-center { display: flex; flex-direction: column; align-items: center; width:100%; }
-    .snark-form-row { display: flex; align-items: center; width: 100%; max-width: 850px; }
-    .search-container {
-      display: flex; flex: 1 1 400px; min-width: 180px; max-width: 600px;
-      background: #fff; border: 2.5px solid var(--main); border-right: none;
-      border-radius: 36px 0 0 36px; height: 56px; overflow: hidden; box-sizing: border-box;
+    .search-bar-inner {
+      width: 100%;
+      max-width: 800px;
+      display: flex;
+      border: 2.5px solid #3C3C8C;
+      border-radius: 36px;
+      overflow: hidden;
+      background: #fff;
     }
-    .search-select { border: none; background: transparent; font-size: 1.13rem; color: #222; padding: 0 19px 0 21px; min-width: 120px; outline: none; }
-    .search-input { flex: 1; border: none; background: transparent; font-size: 1.13rem; color: #333; padding: 0 15px; outline: none; height: 100%; font-family: inherit; box-sizing: border-box; }
+    .search-select {
+      border: none;
+      background: transparent;
+      font-size: 1.09rem;
+      color: #222;
+      padding: 0 20px 0 22px;
+      min-width: 120px;
+      max-width: 180px;
+      outline: none;
+      appearance: none;
+      height: 58px;
+      flex-shrink: 0;
+      cursor: pointer;
+    }
+    .search-input {
+      flex: 1;
+      border: none;
+      background: transparent;
+      font-size: 1.13rem;
+      color: #333;
+      padding: 0 15px;
+      outline: none;
+      height: 58px;
+      font-family: inherit;
+      box-sizing: border-box;
+    }
     .search-btn {
-      border: 2.5px solid var(--main); border-left: none; border-radius: 0 36px 36px 0;
-      background: var(--main); color: #fff; font-size: 1.23rem; font-weight: bold; cursor: pointer;
-      height: 56px; min-width: 105px; padding: 0 26px; display: flex; align-items: center; justify-content: center;
+      border: none;
+      border-left: 2.5px solid #3C3C8C;
+      border-radius: 0 36px 36px 0;
+      background: #3C3C8C;
+      color: #fff;
+      font-size: 1.23rem;
+      font-weight: bold;
+      cursor: pointer;
+      height: 58px;
+      min-width: 105px;
+      padding: 0 26px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
       transition: background 0.2s;
     }
-    .search-btn:hover { background: #232356; }
-    /* 탭 바 스타일 */
-    .tabs-bar {
-      display: flex; justify-content: center; gap: 3px; background: var(--tab-bg);
-      padding: 11px 0 5px 0; border-bottom: 1.5px solid #d2d8ec;
-      position: sticky; top: 80px; z-index: 98;
+    .search-btn:hover {
+      background: #232356;
+    }
+    /* 탭 메뉴 (화면1~7) */
+    .tabs-row {
       width: 100vw;
+      display: flex;
+      justify-content: center;
+      gap: 25px;
+      margin-bottom: 38px;
     }
     .tab-btn {
-      background: var(--main-light); color: var(--tab-text); border: none;
-      padding: 10px 30px; font-size: 1.07rem; border-radius: 13px 13px 0 0;
-      cursor: pointer; font-weight: 600; letter-spacing: 0.4px;
-      transition: background 0.16s, color 0.16s, box-shadow 0.13s;
-      margin: 0 2px;
-      box-shadow: 0 2px 6px #dde1f7;
+      background: none;
+      border: none;
+      color: #232356;
+      font-size: 0.89rem;      /* 글자 크기 반으로 */
+      font-weight: 600;
+      cursor: pointer;
+      padding: 0 2px 1px 2px;
+      margin: 0;
+      border-bottom: 2px solid transparent;
+      transition: color 0.15s;
     }
-    .tab-btn.selected {
-      background: var(--tab-selected); color: var(--tab-selected-text);
-      box-shadow: 0 2px 8px #c6d0fa;
-      z-index: 1;
+    .tab-btn.active {
+      color: #1d257e;
+      border-bottom: 2px solid #1d257e;
+      font-weight: bold;
     }
-    .tab-btn:hover { background: #c7d3ff; }
-    .main-content { max-width: 900px; margin: 0 auto; padding: 0 12px; min-height: 400px; }
-    .tab-view { display: none; min-height: 220px; }
-    .tab-view.active { display: block; animation: fadeIn 0.2s; }
-    @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
-    @media (max-width: 700px) {
-      .snark-form-row { max-width: 99vw; }
-      .tabs-bar { top: 67px; }
-      .main-content { padding: 0 2vw; }
-      .tab-btn { padding: 7px 10vw; min-width: 70px;}
+    .main-content {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 0 12px;
+      min-height: 400px;
     }
-    @media (max-width: 430px) {
-      .tab-btn { padding: 7px 7vw; font-size: 0.99rem;}
+    /* 모바일 대응 */
+    @media (max-width: 800px) {
+      .search-bar-inner { max-width: 98vw; }
+      .tabs-row { gap: 12px; }
+    }
+    @media (max-width: 500px) {
+      .search-bar-wrap { padding-top: 11vw; padding-bottom: 4vw; }
+      .search-bar-inner { max-width: 98vw; }
+      .main-content { padding: 0 5vw; }
+      .tab-btn { font-size: 0.92rem; }
     }
   </style>
 </head>
 <body>
-  <!-- 상단 검색창 -->
-  <div class="search-bar-fixed">
-    <div class="search-bar-center">
-      <form id="snarkForm" onsubmit="HandleForm(this); return false;" class="snark-form-row" autocomplete="off">
-        <div class="search-container">
-          <select name="service" class="search-select" title="검색엔진 선택">
-            <option disabled selected>검색엔진 선택 ▼</option>
-            <option>통합검색-네이버</option>
-            <option>통합검색-Google</option>
-            <!-- ... 기타 생략 ... -->
-          </select>
-          <input size="44" name="query" class="search-input" placeholder="검색어를 입력하세요">
-        </div>
+  <!-- 검색창 -->
+  <div class="search-bar-wrap">
+    <form id="snarkForm" onsubmit="HandleForm(this); return false;" style="width:100%; display: flex; justify-content:center;">
+      <div class="search-bar-inner">
+        <select name="service" class="search-select" title="검색엔진 선택">
+          <option disabled selected>검색엔진 선택 ▼</option>
+          <option>통합검색-네이버</option>
+          <option>통합검색-Google</option>
+          <option>주식챠트검색-Investing</option>
+          <option>챠트검색2-숫자입력</option>
+          <option>동영상검색-Youtube</option>
+          <option>통합검색-다음</option>
+          <option>통합검색-duckduckgo</option>
+          <option>통합검색-msn</option>
+          <option>통합검색-yahoo</option>
+          <option>통합검색-yandex</option>
+          <option>소프트웨어- 윈도우 </option>
+          <option>쇼핑검색- 네이버 </option>
+          <option>중고검색- 중고나라 </option>
+          <option>중고검색- 네이버카페 </option>
+          <option>중고검색- 당근마켓 </option>
+          <option>쇼핑검색- 다나와</option>
+          <option>쇼핑검색- 쿠팡 </option>
+          <option>쇼핑검색-알리(한글,영어)</option>
+          <option>쇼핑검색-아마존(한글,영어)</option>
+          <option>쇼핑검색-이베이(한글,영어)</option>
+          <option>영어사전-정의</option>
+          <option>영어사전-반의어</option>
+          <option>영문법검사기</option>
+          <option>영문법검사기2</option>
+          <option>영어사전-유의어</option>
+          <option>영어사전-어원</option>
+          <option>번역기-영어한글입력</option>
+          <option>사이트번역-주소입력</option>
+          <option>영어이름변경</option>
+          <option>우편번호검색</option>
+          <option>드라마검색-마루TV</option>
+          <option>전화번호검색-114</option>
+          <option>한자검색-네이버 </option>
+          <option>동영상검색-afreecatv</option>
+          <option>동영상검색-TVCAST</option>
+          <option>동영상검색-KAKAOTV</option>
+          <option>동영상검색-Vimeo</option>
+          <option>통합검색-MS-EDGEstore</option>
+          <option>통합검색-크롬웹스토어</option>
+          <option>통합검색-네이버자료실</option>
+          <option>서적검색-교보문고</option>
+          <option>서적검색-알라딘</option>
+          <option>통합검색-Yahoo</option>
+          <option>SNS검색-Twitter</option>
+          <option>SNS검색-instagram</option>
+          <option>SNS검색-kakao.com</option>
+          <option>SNS검색-Tumblr</option>
+          <option>SNS검색-tiktok</option>
+          <option>SNS검색-Pinterest </option>
+          <option>음악검색-네이버</option>
+          <option>음악검색-멜론</option>
+          <option>음악검색-벅스</option>
+          <option>음악검색-Sonshub</option>
+          <option>만화검색-stoon1</option>
+          <option>만화검색-skytoon1</option>
+        </select>
+        <input size="44" name="query" class="search-input" placeholder="검색어를 입력하세요">
         <input type="submit" value="검색" class="search-btn">
-      </form>
-    </div>
+      </div>
+    </form>
   </div>
-  <!-- 탭 버튼 -->
-  <div class="tabs-bar">
-    <button class="tab-btn selected" onclick="showTab(0)">화면1</button>
-    <button class="tab-btn" onclick="showTab(1)">화면2</button>
-    <button class="tab-btn" onclick="showTab(2)">화면3</button>
-    <button class="tab-btn" onclick="showTab(3)">화면4</button>
-    <button class="tab-btn" onclick="showTab(4)">화면5</button>
-    <button class="tab-btn" onclick="showTab(5)">화면6</button>
-    <button class="tab-btn" onclick="showTab(6)">화면7</button>
+
+  <!-- 탭 메뉴 -->
+  <div class="tabs-row" id="tabsRow">
+    <!-- JS에서 생성 -->
   </div>
-  <!-- 하단 콘텐츠 -->
-  <div class="main-content">
-    <div class="tab-view active" id="tab0">
-      <h2>화면 1</h2>
-      <p>여기에 화면1의 내용을 넣으세요.</p>
-      <iframe width="100%" height="300" src="https://www.youtube.com/embed/5qap5aO4i9A" frameborder="0" allowfullscreen></iframe>
-    </div>
-    <div class="tab-view" id="tab1">
-      <h2>화면 2</h2>
-      <p>이곳에 화면2의 내용을 넣으세요.</p>
-      <img src="https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=700&q=80" width="100%" alt="예시 이미지">
-    </div>
-    <div class="tab-view" id="tab2"><h2>화면 3</h2><p>이곳에 화면3의 내용을 넣으세요.</p></div>
-    <div class="tab-view" id="tab3"><h2>화면 4</h2><p>이곳에 화면4의 내용을 넣으세요.</p></div>
-    <div class="tab-view" id="tab4"><h2>화면 5</h2><p>이곳에 화면5의 내용을 넣으세요.</p></div>
-    <div class="tab-view" id="tab5"><h2>화면 6</h2><p>이곳에 화면6의 내용을 넣으세요.</p></div>
-    <div class="tab-view" id="tab6"><h2>화면 7</h2><p>이곳에 화면7의 내용을 넣으세요.</p></div>
+  <!-- 콘텐츠 영역 -->
+  <div class="main-content" id="mainContent">
+    <!-- JS에서 생성 -->
   </div>
 
   <script>
-    // 검색엔진 로직(기존)
+    // 탭, 콘텐츠 데이터
+    const tabs = [
+      {title: '화면1', content: '<h2>화면 1</h2><p>여기에 화면1의 내용을 넣으세요.</p>'},
+      {title: '화면2', content: '<h2>화면 2</h2><p>여기에 화면2의 내용을 넣으세요.</p>'},
+      {title: '화면3', content: '<h2>화면 3</h2><p>여기에 화면3의 내용을 넣으세요.</p>'},
+      {title: '화면4', content: '<h2>화면 4</h2><p>여기에 화면4의 내용을 넣으세요.</p>'},
+      {title: '화면5', content: '<h2>화면 5</h2><p>여기에 화면5의 내용을 넣으세요.</p>'},
+      {title: '화면6', content: '<h2>화면 6</h2><p>여기에 화면6의 내용을 넣으세요.</p>'},
+      {title: '화면7', content: '<h2>화면 7</h2><p>여기에 화면7의 내용을 넣으세요.</p>'}
+    ];
+    // 탭 생성
+    function renderTabs(selected = 0) {
+      let html = '';
+      for(let i=0; i<tabs.length; i++) {
+        html += `<button class="tab-btn${selected===i?' active':''}" onclick="selectTab(${i})">${tabs[i].title}</button>`;
+      }
+      document.getElementById('tabsRow').innerHTML = html;
+    }
+    // 콘텐츠 생성
+    function renderContent(idx = 0) {
+      document.getElementById('mainContent').innerHTML = tabs[idx].content;
+    }
+    // 탭 선택
+    function selectTab(idx) {
+      renderTabs(idx);
+      renderContent(idx);
+    }
+    // 초기 표시
+    renderTabs(0);
+    renderContent(0);
+
+    // 검색엔진 핸들러(그대로)
     var snarkEngines = [
       { name: "통합검색-네이버", home: "https://www.naver.com/", search: "https://search.naver.com/search.naver?query=" },
-      { name: "통합검색-Google", home: "https://www.google.com/", search: "https://www.google.com/search?q=" },
-      // ... 기타 생략 ...
+      { name: "통합검색-Google", home: "https://www.google.co.uk/webhp?hl=ko&gl=uk", search: "https://www.google.co.uk/search?hl=ko&gl=uk&q=" },
+      { name: "주식챠트검색-Investing", home: "https://kr.investing.com/", search: "https://www.tradingview.com/chart/?symbol=" },
+      { name: "챠트검색2-숫자입력", home: "https://s.tradingview.com/", search: "https://s.tradingview.com/widgetembed/?frameElementId=tradingview_059d1&symbol=" },
+      { name: "동영상검색-Youtube", home: "https://www.youtube.com/", search: "https://www.youtube.com/results?search_query=" },
+      { name: "통합검색-다음", home: "https://www.daum.net/", search: "https://search.daum.net/search?w=tot&t__nil_searchbox=suggest&sug=&q=" },
+      { name: "통합검색-duckduckgo", home: "https://duckduckgo.com", search: "https://duckduckgo.com/?q=" },
+      { name: "통합검색-msn", home: "https://www.msn.com/ko-kr/news", search: "https://www.bing.com/search?q=" },
+      { name: "통합검색-yahoo", home: "https://www.yahoo.com", search: "https://search.yahoo.com/search?p=" },
+      { name: "통합검색-yandex", home: "https://yandex.ru", search: "https://yandex.ru/search/?lr=10635&text=" },
+      { name: "소프트웨어- 윈도우 ", home: "https://www.uptodown.com", search: "https://kr.uptodown.com/windows/search/" },
+      { name: "쇼핑검색- 네이버 ", home: "https://shopping.naver.com/", search: "https://shopping.naver.com/search/all_search.nhn?where=all&frm=NVSCTAB&query=" },
+      { name: "중고검색- 중고나라 ", home: "https://cafe.naver.com/joonggonara", search: "https://m.joongna.com/search-list/product?searchword=" },
+      { name: "중고검색- 네이버카페 ", home: "https://cafe.naver.com", search: "https://cafe.naver.com/ca-fe/home/search/c-articles?q=" },
+      { name: "중고검색- 당근마켓 ", home: "https://www.daangn.com", search: "https://www.daangn.com/search/" },
+      { name: "쇼핑검색- 다나와", home: "https://www.danawa.com/", search: "https://search.danawa.com/dsearch.php?k1=" },
+      { name: "쇼핑검색- 쿠팡 ", home: "https://www.coupang.com", search: "https://www.coupang.com/np/search?q=" },
+      { name: "쇼핑검색-알리(한글,영어)", home: "https://ko.aliexpress.com/", search: "https://ko.aliexpress.com/w/wholesale-" },
+      { name: "쇼핑검색-아마존(한글,영어)", home: "https://www.amazon.com/", search: "https://www.amazon.com/s/ref=nb_sb_noss?url=search-alias%3Daps&field-keywords=" },
+      { name: "쇼핑검색-이베이(한글,영어)", home: "https://www.ebay.com/", search: "https://www.ebay.com/sch/i.html?_from=R40&_trksid=p2050601.m570.l1313&_nkw=" },
+      { name: "영어사전-정의", home: "https://www.google.co.uk/webhp?hl=ko&gl=uk", search: "https://www.google.co.uk/search?hl=ko&gl=uk&q=Define+" },
+      { name: "영어사전-반의어", home: "https://www.google.co.uk/webhp?hl=ko&gl=uk", search: "https://www.google.co.uk/search?hl=ko&gl=uk&q=" },
+      { name: "영문법검사기", home: "https://virtualwritingtutor.com/", search: "https://www.google.co.uk/search?hl=ko&gl=uk&q=" },
+      { name: "영문법검사기2", home: "https://www.gingersoftware.com/grammarcheck/", search: "https://www.google.co.uk/search?hl=ko&gl=uk&q=" },
+      { name: "영어사전-유의어", home: "https://www.google.co.uk/webhp?hl=ko&gl=uk", search: "https://www.google.co.uk/search?hl=ko&gl=uk&q=" },
+      { name: "영어사전-어원", home: "https://www.google.co.uk/webhp?hl=ko&gl=uk", search: "https://www.google.co.uk/search?hl=ko&gl=uk&q=" },
+      { name: "번역기-영어한글입력", home: "https://translate.google.co.uk/", search: "https://translate.google.co.uk/?sl=ko&tl=en&text=" },
+      { name: "사이트번역-주소입력", home: "https://papago.naver.net", search: "https://papago.naver.net/website?locale=ko&source=en&target=ko&url=" },
+      { name: "영어이름변경", home: "https://www.passport.go.kr/home/kor/romanizeAutomatic/index.do?menuPos=38", search: "https://www.passport.go.kr/home/kor/romanizeAutomatic/index.do?menuPos=38&idx=&act=&searchKeyword=" },
+      { name: "우편번호검색", home: "https://search.naver.com/search.naver?sm=tab_hty.top&where=nexearch&ie=utf8&query=%EC%9A%B0%EC%B2%B4%EA%B5%AD+%EC%9A%B0%ED%8E%B8%EB%B2%88%ED%98%B8&where=nexearch", search: "https://www.juso.go.kr/support/AddressMainSearch.do?searchKeyword=" },
+      { name: "드라마검색-마루TV", home: "https://marutv.io", search: "https://marutv.io//search.html?keyword=" },
+      { name: "전화번호검색-114", home: "https://www.114.co.kr", search: "https://www.114.co.kr/search/result/all?query=" },
+      { name: "한자검색-네이버 ", home: "http://hanja.naver.com", search: "http://hanja.naver.com/search?query=" },
+      { name: "동영상검색-afreecatv", home: "https://www.afreecatv.com/", search: "https://www.afreecatv.com/total_search.html?szKeyword=" },
+      { name: "동영상검색-TVCAST", home: "https://tvcast.naver.com/", search: "https://tv.naver.com/search?query=" },
+      { name: "동영상검색-KAKAOTV", home: "https://tv.kakao.com/", search: "https://tv.kakao.com/search?q=" },
+      { name: "동영상검색-Vimeo", home: "https://www.vimeo.com", search: "https://vimeo.com/search?q=" },
+      { name: "통합검색-MS-EDGEstore", home: "https://microsoftedge.microsoft.com", search: "https://microsoftedge.microsoft.com/addons/search/" },
+      { name: "통합검색-크롬웹스토어", home: "https://chrome.google.com/webstore/category/extensions?hl=ko", search: "https://chrome.google.com/webstore/search/" },
+      { name: "통합검색-네이버자료실", home: "https://software.naver.com", search: "https://software.naver.com/search.nhn?query=" },
+      { name: "서적검색-교보문고", home: "https://search.kyobobook.co.kr", search: "https://search.kyobobook.co.kr/web/search?vPstrKeyWord=" },
+      { name: "서적검색-알라딘", home: "https://search.kyobobook.co.kr", search: "https://www.aladin.co.kr/search/wsearchresult.aspx?SearchTarget=All&SearchWord=" },
+      { name: "통합검색-Yahoo", home: "https://www.yahoo.com", search: "https://search.yahoo.com/search;_ylt=Ar5458YY5y_GWWeBR2VSqUubvZx4?p=" },
+      { name: "SNS검색-Twitter", home: "https://twitter.com", search: "https://twitter.com/search?q=" },
+      { name: "SNS검색-instagram", home: "https://www.instagram.com", search: "https://www.instagram.com/explore/tags/" },
+      { name: "SNS검색-kakao.com", home: "https://story.kakao.com", search: "https://story.kakao.com/hashtag/" },
+      { name: "SNS검색-Tumblr", home: "https://www.tumblr.com", search: "https://www.tumblr.com/search/" },
+      { name: "SNS검색-tiktok", home: "https://www.tiktok.com", search: "https://www.tiktok.com/search?q=" },
+      { name: "SNS검색-Pinterest ", home: "https://pinterest.com", search: "https://pinterest.com/search/?q=" },
+      { name: "음악검색-네이버", home: "https://music.naver.com", search: "https://music.naver.com/search/search.nhn?query=" },
+      { name: "음악검색-멜론", home: "https://www.melon.com", search: "https://www.melon.com/search/total/index.htm?q=" },
+      { name: "음악검색-벅스", home: "https://bugs.co.kr", search: "https://music.bugs.co.kr/search/integrated?q=" },
+      { name: "음악검색-Sonshub", home: "https://sonshub.co", search: "https://sonshub.co/?s=" },
+      { name: "만화검색-stoon1", home: "https://stoon1.com/webtoon/index/11", search: "https://stoon1.com/search?skeyword=" },
+      { name: "만화검색-skytoon1", home: "https://www.skytoon1.com/webtoon/index/11", search: "https://www.skytoon1.com/search?skeyword=" }
     ];
     function HandleForm(form) {
-      var idx = form.service.selectedIndex - 1;
+      var idx = form.service.selectedIndex - 1; // -1: 안내문구 스킵
       if (idx < 0 || !form.query.value.trim()) {
         alert("검색엔진을 선택하고 검색어를 입력하세요.");
         return false;
@@ -137,16 +296,6 @@
       var eng = snarkEngines[idx];
       var url = q ? (eng.search + encodeURIComponent(q)) : eng.home;
       window.open(url, '_blank');
-    }
-
-    // 탭 로직
-    function showTab(idx) {
-      var tabs = document.querySelectorAll('.tab-btn');
-      var views = document.querySelectorAll('.tab-view');
-      tabs.forEach((btn, i) => {
-        btn.classList.toggle('selected', i === idx);
-        views[i].classList.toggle('active', i === idx);
-      });
     }
   </script>
 </body>
