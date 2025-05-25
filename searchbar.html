@@ -2,90 +2,98 @@
 <html lang="ko">
 <head>
   <meta charset="UTF-8">
-  <title>중앙정렬 검색엔진바</title>
-  <!-- Google Fonts (Noto Sans KR) -->
-  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@500;700&display=swap" rel="stylesheet">
-  <meta name="viewport" content="width=700, initial-scale=1.0, maximum-scale=1.0">
+  <title>검색엔진 통합 검색바</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <style>
     body {
+      background: #fff;
       margin: 0;
       padding: 0;
-      background: #fff;
-      font-family: 'Noto Sans KR', Arial, sans-serif;
+      font-family: 'Segoe UI', '맑은 고딕', 'NanumGothic', Arial, sans-serif;
     }
     .search-bar-wrap {
       width: 100vw;
       display: flex;
       justify-content: center;
-      align-items: center;
-      margin: 48px 0 0 0;
+      margin-top: 40px;
+      margin-bottom: 32px;
     }
     .search-bar {
+      display: flex;
+      align-items: center;
       width: 100%;
       max-width: 700px;
       background: #fff;
-      border: 3px solid #232c61;
+      border: 3px solid #232d63;
       border-radius: 48px;
-      display: flex;
-      align-items: center;
-      box-shadow: 0 3px 14px rgba(40,50,100,0.08);
+      box-sizing: border-box;
+      height: 72px;
+      box-shadow: 0 3px 14px rgba(30,32,80,0.04);
+      overflow: hidden;
     }
-    .search-select {
+    .engine-select {
       border: none;
       background: transparent;
-      font-size: 1.22rem;
-      font-weight: 700;
-      color: #232c61;
-      padding: 0 24px;
-      min-width: 170px;
+      font-size: 1.23rem;
+      font-weight: bold;
+      color: #232d63;
+      padding: 0 16px 0 30px;
       outline: none;
+      min-width: 190px;
       appearance: none;
       cursor: pointer;
+      height: 72px;
     }
     .search-input {
       flex: 1;
       border: none;
       background: transparent;
-      font-size: 1.13rem;
-      color: #444;
-      padding: 0 16px;
+      font-size: 1.18rem;
+      color: #565656;
+      padding: 0 15px;
       outline: none;
+      height: 72px;
       font-family: inherit;
-      height: 60px;
-      box-sizing: border-box;
     }
     .search-btn {
       border: none;
-      background: #232c61;
+      border-left: 3px solid #232d63;
+      background: #232d63;
       color: #fff;
-      font-family: 'Noto Sans KR', Arial, sans-serif;
-      font-size: 1.15rem;
-      font-weight: 700;
-      border-radius: 0 48px 48px 0;
-      min-width: 92px;
-      height: 60px;
+      font-size: 1.28rem;
+      font-weight: bold;
       cursor: pointer;
-      transition: background 0.18s;
-      letter-spacing: 0.04em;
+      height: 72px;
+      width: 102px;
+      border-radius: 0 48px 48px 0;
+      transition: background 0.19s;
     }
     .search-btn:hover {
-      background: #171b39;
+      background: #0a1641;
     }
-    /* 반응형 */
-    @media (max-width: auto) {
-      .search-bar-wrap { margin: 18px 0; }
-      .search-bar { max-width: 98vw; border-radius: 32px; }
-      .search-select { min-width: 110px; font-size: 1.05rem; padding: 0 11px; }
-      .search-input { font-size: 0.98rem; height: 46px; }
-      .search-btn { font-size: 0.95rem; min-width: 64px; height: 46px; border-radius: 0 32px 32px 0;}
+    @media (max-width: 780px) {
+      .search-bar { max-width: 98vw; }
+    }
+    @media (max-width: 520px) {
+      .search-bar {
+        border-radius: 23px;
+        height: 50px;
+        max-width: 99vw;
+      }
+      .engine-select, .search-input, .search-btn {
+        height: 48px;
+        font-size: 1rem;
+      }
+      .engine-select { min-width: 120px; padding: 0 7px 0 14px; }
+      .search-btn { width: 68px; font-size: 1rem; }
     }
   </style>
 </head>
 <body>
   <div class="search-bar-wrap">
-    <form id="searchForm" class="search-bar" onsubmit="return goSearch(this)">
-      <select name="engine" class="search-select">
-        <option>통합검색-네이버▼</option>
+    <form class="search-bar" onsubmit="return goSearch(this);" autocomplete="off">
+      <select name="engine" class="engine-select">
+        <option>통합검색-네이버</option>
         <option>통합검색-Google</option>
         <option>주식챠트검색-Investing</option>
         <option>챠트검색2-숫자입력</option>
@@ -95,13 +103,13 @@
         <option>통합검색-msn</option>
         <option>통합검색-yahoo</option>
         <option>통합검색-yandex</option>
-        <option>소프트웨어- 윈도우</option>
-        <option>쇼핑검색- 네이버</option>
-        <option>중고검색- 중고나라</option>
-        <option>중고검색- 네이버카페</option>
-        <option>중고검색- 당근마켓</option>
+        <option>소프트웨어- 윈도우 </option>
+        <option>쇼핑검색- 네이버 </option>
+        <option>중고검색- 중고나라 </option>
+        <option>중고검색- 네이버카페 </option>
+        <option>중고검색- 당근마켓 </option>
         <option>쇼핑검색- 다나와</option>
-        <option>쇼핑검색- 쿠팡</option>
+        <option>쇼핑검색- 쿠팡 </option>
         <option>쇼핑검색-알리(한글,영어)</option>
         <option>쇼핑검색-아마존(한글,영어)</option>
         <option>쇼핑검색-이베이(한글,영어)</option>
@@ -117,7 +125,7 @@
         <option>우편번호검색</option>
         <option>드라마검색-마루TV</option>
         <option>전화번호검색-114</option>
-        <option>한자검색-네이버</option>
+        <option>한자검색-네이버 </option>
         <option>동영상검색-afreecatv</option>
         <option>동영상검색-TVCAST</option>
         <option>동영상검색-KAKAOTV</option>
@@ -133,7 +141,7 @@
         <option>SNS검색-kakao.com</option>
         <option>SNS검색-Tumblr</option>
         <option>SNS검색-tiktok</option>
-        <option>SNS검색-Pinterest</option>
+        <option>SNS검색-Pinterest </option>
         <option>음악검색-네이버</option>
         <option>음악검색-멜론</option>
         <option>음악검색-벅스</option>
@@ -141,12 +149,13 @@
         <option>만화검색-stoon1</option>
         <option>만화검색-skytoon1</option>
       </select>
-      <input class="search-input" name="query" type="text" autocomplete="off" placeholder="검색어를 입력하세요">
-      <button type="submit" class="search-btn">검색</button>
+      <input type="text" name="query" class="search-input" placeholder="검색어를 입력하세요">
+      <input type="submit" value="검색" class="search-btn">
     </form>
   </div>
+
   <script>
-    // 검색엔진 주소 배열 (이전 코드와 동일)
+    // 검색엔진 정보 배열
     var snarkEngines = [
       { name: "통합검색-네이버", home: "https://www.naver.com/", search: "https://search.naver.com/search.naver?query=" },
       { name: "통합검색-Google", home: "https://www.google.co.uk/webhp?hl=ko&gl=uk", search: "https://www.google.co.uk/search?hl=ko&gl=uk&q=" },
@@ -204,7 +213,6 @@
       { name: "만화검색-stoon1", home: "https://stoon1.com/webtoon/index/11", search: "https://stoon1.com/search?skeyword=" },
       { name: "만화검색-skytoon1", home: "https://www.skytoon1.com/webtoon/index/11", search: "https://www.skytoon1.com/search?skeyword=" }
     ];
-
     function goSearch(form) {
       var idx = form.engine.selectedIndex;
       var q = form.query.value.trim();
